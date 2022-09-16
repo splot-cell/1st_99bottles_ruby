@@ -8,8 +8,8 @@ class Bottles
   end
 
   def verse(number)
-    bottle_number = BottleNumber.new(number)
-    next_bottle_number = BottleNumber.new(bottle_number.successor)
+    bottle_number = BottleNumber.for(number)
+    next_bottle_number = BottleNumber.for(bottle_number.successor)
 
     "#{bottle_number} of beer on the wall, ".capitalize +
     "#{bottle_number} of beer.\n" +
@@ -19,7 +19,12 @@ class Bottles
 end
 
 class BottleNumber
-  def for(number)
+  def self.for(number)
+    begin
+      const_get("BottleNumber#{number}")
+    rescue NameError
+      BottleNumber
+    end.new(number)
   end
 
   attr_reader :number
