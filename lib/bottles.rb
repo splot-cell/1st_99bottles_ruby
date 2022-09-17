@@ -9,12 +9,11 @@ class Bottles
 
   def verse(number)
     bottle_number = BottleNumber.for(number)
-    next_bottle_number = BottleNumber.for(bottle_number.successor)
 
     "#{bottle_number} of beer on the wall, ".capitalize +
     "#{bottle_number} of beer.\n" +
     "#{bottle_number.action}, " +
-    "#{next_bottle_number} of beer on the wall.\n"
+    "#{bottle_number.successor} of beer on the wall.\n"
   end
 end
 
@@ -33,43 +32,23 @@ class BottleNumber
   end
 
   def container
-    if number == 1
-      "bottle"
-    else
-      "bottles"
-    end
+    "bottles"
   end
 
   def quantity
-    if number == 0
-      "no more"
-    else
-      number.to_s
-    end
+    number.to_s
   end
 
   def action
-    if number == 0
-      "Go to the store and buy some more"
-    else
-      "Take #{pronoun} down and pass it around"
-    end
+    "Take #{pronoun} down and pass it around"
   end
 
   def pronoun
-    if number == 1
-      "it"
-    else
-      "one"
-    end
+    "one"
   end
 
   def successor
-    if number == 0
-      99
-    else
-      number - 1
-    end
+    BottleNumber.for(number - 1)
   end
 
   def to_s
@@ -77,8 +56,26 @@ class BottleNumber
   end
 end
 
+class BottleNumber1 < BottleNumber
+  def container
+    "bottle"
+  end
+
+  def pronoun
+    "it"
+  end
+end
+
 class BottleNumber0 < BottleNumber
   def quantity
     "no more"
+  end
+
+  def action
+    "Go to the store and buy some more"
+  end
+
+  def successor
+    BottleNumber.for(99)
   end
 end
