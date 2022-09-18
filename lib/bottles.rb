@@ -18,13 +18,13 @@ class Bottles
 end
 
 class BottleNumber
-  @@registry = [BottleNumber]
+  @registry = [BottleNumber]
   def self.for(number)
-    @@registry.find { |candidate| candidate.can_handle(number) }.new(number)
+    @registry.find { |candidate| candidate.can_handle(number) }.new(number)
   end
 
   def self.register(candidate)
-    @@registry.unshift(candidate)
+    @registry.unshift(candidate)
   end
 
   attr_reader :number
