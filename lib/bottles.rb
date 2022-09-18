@@ -18,12 +18,13 @@ class Bottles
 end
 
 class BottleNumber
+  @@registry = [BottleNumber]
   def self.for(number)
-    begin
-      const_get("BottleNumber#{number}")
-    rescue NameError
-      BottleNumber
-    end.new(number)
+    @@registry.find { |candidate| candidate.can_handle(number) }.new(number)
+  end
+
+  def self.register(candidate)
+    @@registry.unshift(candidate)
   end
 
   attr_reader :number
@@ -54,6 +55,10 @@ class BottleNumber
   def to_s
     "#{quantity} #{container}"
   end
+
+  def self.can_handle(number)
+    true
+  end
 end
 
 class BottleNumber1 < BottleNumber
@@ -64,7 +69,13 @@ class BottleNumber1 < BottleNumber
   def pronoun
     "it"
   end
+
+  def self.can_handle(number)
+    number == 1
+  end
 end
+
+BottleNumber.register(BottleNumber1)
 
 class BottleNumber0 < BottleNumber
   def quantity
@@ -78,4 +89,26 @@ class BottleNumber0 < BottleNumber
   def successor
     BottleNumber.for(99)
   end
+
+  def self.can_handle(number)
+    number == 0
+  end
 end
+
+BottleNumber.register(BottleNumber0)
+
+class BottleNumber6 < BottleNumber
+  def container
+    "six-pack"
+  end
+
+  def quantity
+    "1"
+  end
+
+  def self.can_handle(number)
+    number == 6
+  end
+end
+
+BottleNumber.register(BottleNumber6)
